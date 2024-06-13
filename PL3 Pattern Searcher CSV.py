@@ -52,7 +52,7 @@ def main():
     """PL3 Pattern Searcher: 指定されたディレクトリ内の .pl3 ファイルから特定のパターンを検索してログに記録するプログラム"""
     
     # 検索パターンのリスト
-    patterns = [r'V=40.*?\.txp', r'V=60.*?\.txp', r'V=80.*?\.txp', r'V=100.*?\.txp']
+    patterns = [r'V=40.*?\.csv', r'V=60.*?\.csv', r'V=80.*?\.csv', r'V=100.*?\.csv']
     
     # ディレクトリを選択
     directory = select_directory()
@@ -73,7 +73,7 @@ def main():
                     results[root_dir][file_path].extend(matches)
 
     # ログファイルに結果を記録
-    log_file_path = "PL3_pattern_search_results.log"
+    log_file_path = "PL3_pattern_search_results_csv.log"
     write_log_file(results, log_file_path)
 
 if __name__ == "__main__":
