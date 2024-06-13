@@ -30,15 +30,17 @@ def write_log_file(results, log_file_path):
     """検索結果をログファイルに書き込む"""
     try:
         with open(log_file_path, "w", encoding="utf-8") as log_file:
-            for file_path, matches in results.items():
-                log_file.write(f"File: {file_path}\n")
-                log_file.write(f"References ({len(matches)} times):\n")
-                unique_matches = set(matches)
-                if len(unique_matches) > 1:
-                    log_file.write("  Different references found:\n")
-                for match in unique_matches:
-                    count = matches.count(match)
-                    log_file.write(f"  {match} (count: {count})\n")
+            for directory, files in results.items():
+                log_file.write(f"Directory: {directory}\n")
+                for file_path, matches in files.items():
+                    log_file.write(f"  File: {file_path}\n")
+                    log_file.write(f"  References ({len(matches)} times):\n")
+                    unique_matches = set(matches)
+                    if len(unique_matches) > 1:
+                        log_file.write("    Different references found:\n")
+                    for match in unique_matches:
+                        count = matches.count(match)
+                        log_file.write(f"    {match} (count: {count})\n")
                 log_file.write("\n")
         print(f"Log file has been created: {log_file_path}")
     except IOError as e:
@@ -59,7 +61,7 @@ def main():
         return
 
     # 結果を保存する辞書
-    results = defaultdict(list)
+    results = defaultdict(lambda: defaultdict(list))
 
     # 指定されたディレクトリ内のすべての .pl3 ファイルを検索
     for root_dir, _, files in os.walk(directory):
@@ -68,7 +70,7 @@ def main():
                 file_path = os.path.join(root_dir, file)
                 matches = search_patterns_in_file(file_path, patterns)
                 if matches:
-                    results[file_path].extend(matches)
+                    results[root_dir][file_path].extend(matches)
 
     # ログファイルに結果を記録
     log_file_path = "PL3_pattern_search_results.log"
